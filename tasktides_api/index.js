@@ -105,7 +105,7 @@ app.post("/clitem", async (req, res) => {
 // Delete a checklists item
 app.delete("/clitem/:id", async (req, res) => {
   try {
-    const id = req.params.id;
+    const id = +req.params.id;
     const item = await prisma.ChecklistsItem.delete({
       where: {
         id,

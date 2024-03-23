@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 
 import BaseBody from "../templates/BaseBody.jsx";
 
-import sampleChecklists from "../models/sampleChecklists.js";
-import sampleChecklistItems from "../models/sampleChecklistItems.js";
+// import sampleChecklists from "../models/sampleChecklists.js";
+// import sampleChecklistItems from "../models/sampleChecklistItems.js";
 
 import Checklists from "../components/checklists/Checklists.jsx";
 import ChecklistItems from "../components/checklists/ChecklistItems.jsx";
@@ -18,13 +18,23 @@ const ChecklistsPage = () => {
 
   useEffect(() => {
     const getChecklistsFromApi = async () => {
-      const data = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/checklists`);
+      const data = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/checklists`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       const res = await data.json();
       setChecklists(res);
     };
 
     const getItemsFromApi = async () => {
-      const data = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/clItems`);
+      const data = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/clItems`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
       const res = await data.json();
       setItems(res);
     };
@@ -58,34 +68,51 @@ const ChecklistsPage = () => {
     setCurrentListId(newList.id);
   };
 
-  const onAddItem = (e) => {
+  const onAddItem = async (e) => {
     e.preventDefault();
     const checklistId = +e.target.list.value;
     if (checklistId === -1) {
       alert('Please select a checklist!');
       return;
     }
+
     const title = e.target.title.value;
     const due = e.target.due.value;
     const important = e.target.important.value === "on" ? true : false;
     const completed = e.target.completed.value === "on" ? true : false;
-    const newItem = {
-      id: Date.now(),
-      checklistId,
-      title,
-      due,
-      content: "",
-      important,
-      completed,
-    };
-    console.log(newItem);
-    e.target.reset();
-    setItems([...items, newItem]);
-    setCurrentListId(checklistId);
+
+    const data = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/clitem`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        checklistId,
+        title,
+        due,
+        content: "",
+        important,
+        completed,
+      }),
+    });
+    if (data.ok) {
+      const newItem = await data.json();
+      setItems([...items, newItem]);
+      setCurrentListId(checklistId);
+      e.target.reset();
+    }
   };
 
-  const onDelete = (id) => {
-    setItems(items.filter(item => item.id !== id));
+  const onDelete = async (id) => {
+    const data = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/clitem/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (data.ok) {
+      setItems(items.filter(item => item.id !== id));
+    }
   }
 
   const onDetail = (id) => {
