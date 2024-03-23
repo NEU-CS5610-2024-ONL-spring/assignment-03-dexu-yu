@@ -28,7 +28,7 @@ const ChecklistItemInputForm = ({ checklists, currentListId, onAddItem }) => {
         ))}
       </select>
       <label htmlFor="item-title">Title: </label>
-      <input type="text" id="item-title" name="title" required autoComplete="off" />
+      <input type="text" id="item-title" name="title" required autoComplete="off" maxLength="50" />
       <label htmlFor="item-due">Due: </label>
       <input type="date" id="item-due" name="due" required autoComplete="off" />
       <label htmlFor="item-important">Important: </label>

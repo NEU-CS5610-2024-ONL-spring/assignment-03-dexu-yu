@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const ChecklistItems = ({ items }) => {
+const ChecklistItems = ({ items, onDetail, onDelete }) => {
   return (
     <ul>
       {items.map(item => (
@@ -11,6 +11,8 @@ const ChecklistItems = ({ items }) => {
           <div>{item.content}</div>
           <div>{item.important}</div>
           <div>{item.completed}</div>
+          <button onClick={() => onDetail(item.id)}>Detail</button>
+          <button onClick={() => onDelete(item.id)}>Delete</button>
         </li>
       ))}
     </ul>
@@ -27,6 +29,8 @@ ChecklistItems.propTypes = {
       completed: PropTypes.bool.isRequired,
     })
   ),
+  onDetail: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default ChecklistItems;

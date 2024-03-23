@@ -19,7 +19,7 @@ const ChecklistsPage = () => {
   useEffect(() => {
     const getDataFromApi = async () => {
       setCurrentListId(-1);
-      await setChecklists(sampleChecklists);
+      setChecklists(sampleChecklists);
       const allItems = await sampleChecklistItems;
       setItems(allItems);
       setDisplayedItems(allItems);
@@ -33,7 +33,7 @@ const ChecklistsPage = () => {
     } else {
       setDisplayedItems(items.filter(item => item.checklistId === currentListId));
     }
-  }, [currentListId]);
+  }, [currentListId, items]);
 
   const onClickList = (id) => {
     setCurrentListId(id);
@@ -51,8 +51,8 @@ const ChecklistsPage = () => {
 
   const onAddItem = (e) => {
     e.preventDefault();
-    const listId = e.target.list.value;
-    if (listId === -1) {
+    const checklistId = +e.target.list.value;
+    if (checklistId === -1) {
       alert('Please select a checklist!');
       return;
     }
@@ -60,10 +60,9 @@ const ChecklistsPage = () => {
     const due = e.target.due.value;
     const important = e.target.important.value === "on" ? true : false;
     const completed = e.target.completed.value === "on" ? true : false;
-    console.log(listId, title, due, important, completed);
     const newItem = {
       id: Date.now(),
-      listId,
+      checklistId,
       title,
       due,
       content: "",
@@ -72,14 +71,24 @@ const ChecklistsPage = () => {
     };
     console.log(newItem);
     e.target.reset();
+    setItems([...items, newItem]);
+    setCurrentListId(checklistId);
   };
+
+  const onDelete = (id) => {
+    setItems(items.filter(item => item.id !== id));
+  }
+
+  const onDetail = (id) => {
+    console.log(id);
+  }
 
   return (
     <BaseBody>
       <h1>ChecklistsPage</h1>
       <Checklists checklists={checklists} onClickList={onClickList} onAddList={onAddList} />
       <ChecklistItemInputForm checklists={checklists} currentListId={currentListId} onAddItem={onAddItem} />
-      <ChecklistItems items={displayedItems} />
+      <ChecklistItems items={displayedItems} onDelete={onDelete} onDetail={onDetail} />
     </BaseBody>
   );
 };
