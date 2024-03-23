@@ -17,14 +17,23 @@ const ChecklistsPage = () => {
   const [displayedItems, setDisplayedItems] = useState([]);
 
   useEffect(() => {
-    const getDataFromApi = async () => {
-      setCurrentListId(-1);
-      setChecklists(sampleChecklists);
-      const allItems = await sampleChecklistItems;
-      setItems(allItems);
-      setDisplayedItems(allItems);
+    const getChecklistsFromApi = async () => {
+      const data = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/checklists`);
+      const res = await data.json();
+      setChecklists(res);
     };
-    getDataFromApi();
+
+    const getItemsFromApi = async () => {
+      const data = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/clItems`);
+      const res = await data.json();
+      setItems(res);
+    };
+
+    getChecklistsFromApi();
+    getItemsFromApi();
+
+    setCurrentListId(-1);
+    setDisplayedItems(items);
   }, []);
   
   useEffect(() => {
