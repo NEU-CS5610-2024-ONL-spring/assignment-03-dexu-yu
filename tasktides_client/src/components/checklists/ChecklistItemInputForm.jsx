@@ -26,8 +26,8 @@ const ChecklistItemInputForm = ({ currentListId, checklists, onAddItem }) => {
               aria-label="Close"
             />
           </div>
-          <div className="modal-body">
-            <form onSubmit={onAddItem}>
+          <form onSubmit={onAddItem}>
+            <div className="modal-body">
               <div className="mb-3">
                 <label htmlFor="item-list" className="form-label">Checklist</label>
                 <select
@@ -63,8 +63,8 @@ const ChecklistItemInputForm = ({ currentListId, checklists, onAddItem }) => {
                   type="date"
                   id="item-due"
                   name="due"
+                  defaultValue={new Date().toISOString().split('T')[0]}
                   required
-                  autoComplete="off"
                 />
               </div>
               <div className="mb-3 form-check">
@@ -93,8 +93,8 @@ const ChecklistItemInputForm = ({ currentListId, checklists, onAddItem }) => {
                 <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                 <button type="submit" className="btn btn-primary" data-bs-dismiss="modal">Save</button>
               </div>
-            </form>
-          </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>

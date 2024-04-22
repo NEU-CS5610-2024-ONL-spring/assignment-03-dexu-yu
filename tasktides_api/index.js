@@ -152,6 +152,30 @@ app.post("/clitem", async (req, res) => {
   }
 });
 
+app.put("/clitem/:id", async (req, res) => {
+  const { id } = req.params;
+  const { title, due, content, important, completed } = req.body;
+
+  try {
+    const updatedItem = await prisma.checklistsItem.update({
+      where: { id: parseInt(id, 10) },
+      data: {
+        title,
+        due,
+        content,
+        important,
+        completed,
+      },
+    });
+    res.status(200).json(updatedItem);
+  } catch (err) {
+    console.error("Error updating the checklist item", err);
+    res.status(500).json({
+      message: "Error updating checklist item",
+    });
+  }
+});
+
 // Delete a checklists item
 app.delete("/clitem/:id", async (req, res) => {
   try {
@@ -170,6 +194,6 @@ app.delete("/clitem/:id", async (req, res) => {
   }
 });
 
-app.listen(3000, () => {
-  console.log("listening on http://localhost:3000");
+app.listen(8000, () => {
+  console.log("listening on http://localhost:8000");
 });

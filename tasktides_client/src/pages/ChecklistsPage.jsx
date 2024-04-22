@@ -1,9 +1,8 @@
+//TODO: only valid input modals should disappear
+
 import React, { useEffect, useState } from "react";
 
 import BaseBody from "../templates/BaseBody.jsx";
-
-// import sampleChecklists from "../models/sampleChecklists.js";
-// import sampleChecklistItems from "../models/sampleChecklistItems.js";
 
 import Checklists from "../components/checklists/Checklists.jsx";
 import ChecklistItems from "../components/checklists/ChecklistItems.jsx";
@@ -58,7 +57,9 @@ const ChecklistsPage = () => {
     setCurrentListId(id);
   };
 
-  const onAddList = async (title) => {
+  const onAddList = async (e) => {
+    e.prevenDefault();
+    const title = e.target.title.value;
     const data = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/checklist`, {
       method: "POST",
       headers: {
@@ -83,8 +84,6 @@ const ChecklistsPage = () => {
     if (!confirm("Are you sure you want to delete this list?")) {
       return;
     }
-  
-    // First, try to delete all items in the checklist
     try {
       const itemsResponse = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/checklist/${id}/items`, {
         method: "DELETE",
@@ -131,8 +130,11 @@ const ChecklistsPage = () => {
 
     const title = e.target.title.value;
     const due = e.target.due.value;
-    const important = e.target.important.value === "on" ? true : false;
-    const completed = e.target.completed.value === "on" ? true : false;
+    const important = e.target.important.checked ? true : false;
+    const completed = e.target.completed.checked ? true : false;
+
+    console.log(e.target.important.value, e.target.completed.value);
+    console.log(checklistId, title, due, important, completed);
 
     const data = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/clitem`, {
       method: "POST",
@@ -175,6 +177,25 @@ const ChecklistsPage = () => {
     }
   }
 
+  const onUpdateItem = async (id, newItem) => {
+    try {
+      const data = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/clitem/${id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newItem),
+      });
+      if (!data.ok) {
+        const error = await data.json();
+        throw new Error(error.message);
+      }
+      setItems(items.map(item => item.id === id ? newItem : item));
+    } catch (error) {
+      alert("Failed to update item");
+    }
+  };
+
   const onDetail = (id) => {
     console.log(id);
   }
@@ -199,6 +220,7 @@ const ChecklistsPage = () => {
               items={displayedItems}
               onDelete={onDeleteItem}
               onDetail={onDetail}
+              onUpdate={onUpdateItem}
             />
           </div>
         </div>
