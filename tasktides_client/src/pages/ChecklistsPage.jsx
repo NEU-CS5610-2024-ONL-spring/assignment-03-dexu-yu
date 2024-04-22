@@ -58,22 +58,68 @@ const ChecklistsPage = () => {
     setCurrentListId(id);
   };
 
-  const onAddList = (listName) => {
-    const newList = {
-      id: checklists.length + 1,
-      title: listName,
-      userId: 101,
-    };
-    setChecklists([...checklists, newList]);
-    setCurrentListId(newList.id);
+  const onAddList = async (title) => {
+    const data = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/checklist`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title,
+      }),
+    });
+    if (data.ok) {
+      const newList = await data.json();
+      if (!newList) {
+        alert('Failed to add list');
+        return;
+      }
+      setChecklists([...checklists, newList]);
+      setCurrentListId(newList.id);
+    }
   };
 
-  const onDeleteList = (id) => {
+  const onDeleteList = async (id) => {
     if (!confirm("Are you sure you want to delete this list?")) {
       return;
     }
-    console.log(id);
-  }
+  
+    // First, try to delete all items in the checklist
+    try {
+      const itemsResponse = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/checklist/${id}/items`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      if (!itemsResponse.ok) {
+        const error = await itemsResponse.json();
+        throw new Error(error.message);
+      }
+      setItems(items.filter(item => item.checklistId !== id));
+  
+      const checklistResponse = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/checklist/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      if (checklistResponse.ok) {
+        setChecklists(checklists.filter(list => list.id !== id));
+        if (currentListId === id) {
+          setCurrentListId(-1);
+        }
+      } else {
+        const error = await checklistResponse.json();
+        throw new Error(error.message);
+      }
+    } catch (error) {
+      console.error("Failed to delete the checklist or its items: ", error.message);
+    }
+  };
+
 
   const onAddItem = async (e) => {
     e.preventDefault();
@@ -104,6 +150,10 @@ const ChecklistsPage = () => {
     });
     if (data.ok) {
       const newItem = await data.json();
+      if (!newItem) {
+        alert('Failed to add item');
+        return;
+      }
       setItems([...items, newItem]);
       setCurrentListId(checklistId);
       e.target.reset();

@@ -13,6 +13,10 @@ app.use(morgan("dev"));
 const { PrismaClient } = pkg;
 const prisma = new PrismaClient();
 
+app.get("/ping", (req, res) => {
+  res.send("pong");
+});
+
 // Checklists
 
 // Get all the checklists
@@ -42,6 +46,52 @@ app.post("/checklist", async (req, res) => {
     console.log("Can't create the checklist", err);
     res.status(500).json({
       message: "Can't create the checklist!",
+    });
+  }
+});
+
+// Delete a checklist by id
+app.delete("/checklist/:id", async (req, res) => {
+  try {
+    const id = +req.params.id;
+    const checklist = await prisma.Checklist.delete({
+      where: {
+        id,
+      },
+    });
+    res.status(200).json(checklist);
+  } catch (err) {
+    console.log("Can't delete the checklist", err);
+    res.status(500).json({
+      message: "Can't delete the checklist!",
+    });
+  }
+});
+
+// Delete all checklist items by checklistId
+app.delete('/checklist/:checklistId/items', async (req, res) => {
+  try {
+    const checklistId = parseInt(req.params.checklistId, 10);
+    const checklistExists = await prisma.Checklist.findUnique({
+      where: { id: checklistId },
+    });
+
+    if (!checklistExists) {
+      return res.status(404).json({ message: "Checklist not found" });
+    }
+
+    const deletedItems = await prisma.ChecklistsItem.deleteMany({
+      where: {
+        checklistId: checklistId,
+      },
+    });
+
+    res.status(200).json({ deletedCount: deletedItems.count });
+  } catch (err) {
+    console.error("Can't delete the checklist items", err);
+    res.status(500).json({
+      message: "Can't delete checklist items",
+      error: err.message,
     });
   }
 });
