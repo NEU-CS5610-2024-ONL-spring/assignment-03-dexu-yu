@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 const Checklists = ({ currentListId, checklists, onClickList, onAddList }) => {
   return (
     <>
-      <ul className="list-group">
+      <ul className="list-group mt-2">
         <li
           key={-1}
           className={currentListId === -1 ? "list-group-item active" : "list-group-item"}

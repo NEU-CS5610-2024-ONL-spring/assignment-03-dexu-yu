@@ -75,7 +75,7 @@ const ChecklistItemInputForm = ({ currentListId, checklists, onAddItem }) => {
         </div>
         <span className="input-group-text">Completed</span>
       </div>
-      <button className="btn btn-primary" type="submit">Add Event</button>
+      <button className="btn btn-primary" type="submit">Save</button>
     </form>
   );
 };

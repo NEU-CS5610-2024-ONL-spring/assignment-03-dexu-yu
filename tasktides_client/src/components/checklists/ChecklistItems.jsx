@@ -6,7 +6,7 @@ const ChecklistItems = ({ items, onDetail, onDelete }) => {
   return (
     <>
       {items.map(item => (
-        <div key={item.id} className="card">
+        <div key={item.id} className="card mt-2">
           <div className="card-header">
             {item.due}
           </div>
