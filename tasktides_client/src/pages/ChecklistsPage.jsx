@@ -121,10 +121,32 @@ const ChecklistsPage = () => {
 
   return (
     <BaseBody>
-      <h1>ChecklistsPage</h1>
-      <Checklists checklists={checklists} onClickList={onClickList} onAddList={onAddList} />
-      <ChecklistItemInputForm checklists={checklists} currentListId={currentListId} onAddItem={onAddItem} />
-      <ChecklistItems items={displayedItems} onDelete={onDelete} onDetail={onDetail} />
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col-md-4">
+            <Checklists 
+              currentListId={currentListId}
+              checklists={checklists}
+              onClickList={onClickList}
+              onAddList={onAddList}
+            />
+          </div>
+          <div className="col-md-4">
+            <ChecklistItemInputForm 
+              checklists={checklists} 
+              currentListId={currentListId} 
+              onAddItem={onAddItem}
+            />
+          </div>
+          <div className="col-md-4">
+            <ChecklistItems
+              items={displayedItems}
+              onDelete={onDelete}
+              onDetail={onDetail} 
+            />
+          </div>
+        </div>
+      </div>
     </BaseBody>
   );
 };

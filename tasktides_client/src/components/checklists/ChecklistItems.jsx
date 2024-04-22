@@ -2,20 +2,22 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const ChecklistItems = ({ items, onDetail, onDelete }) => {
+  console.log(items);
   return (
-    <ul>
+    <>
       {items.map(item => (
-        <li key={item.id}>
-          <div>{item.title}</div>
-          <div>{item.due}</div>
-          <div>{item.content}</div>
-          <div>{item.important}</div>
-          <div>{item.completed}</div>
-          <button onClick={() => onDetail(item.id)}>Detail</button>
-          <button onClick={() => onDelete(item.id)}>Delete</button>
-        </li>
+        <div key={item.id} className="card">
+          <div className="card-header">
+            {item.due}
+          </div>
+          <div className="card-body">
+            <h5 className="card-title">{item.title}</h5>
+            <button onClick={() => onDetail(item.id)} className="btn btn-primary">Detail</button>
+            <button onClick={() => onDelete(item.id)} className="btn btn-danger">Delete</button>
+          </div>
+        </div>
       ))}
-    </ul>
+    </>
   );
 };
 
