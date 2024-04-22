@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 
 const ChecklistItems = ({ items, onDetail, onDelete }) => {
-  console.log(items);
   return (
     <>
       {items.map(item => (

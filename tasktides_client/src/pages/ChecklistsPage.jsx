@@ -58,15 +58,22 @@ const ChecklistsPage = () => {
     setCurrentListId(id);
   };
 
-  const onAddList = () => {
+  const onAddList = (listName) => {
     const newList = {
       id: checklists.length + 1,
-      title: "Untitled",
+      title: listName,
       userId: 101,
     };
     setChecklists([...checklists, newList]);
     setCurrentListId(newList.id);
   };
+
+  const onDeleteList = (id) => {
+    if (!confirm("Are you sure you want to delete this list?")) {
+      return;
+    }
+    console.log(id);
+  }
 
   const onAddItem = async (e) => {
     e.preventDefault();
@@ -103,7 +110,10 @@ const ChecklistsPage = () => {
     }
   };
 
-  const onDelete = async (id) => {
+  const onDeleteItem = async (id) => {
+    if (!confirm("Are you sure you want to delete this item?")) {
+      return;
+    }
     const data = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/clitem/${id}`, {
       method: "DELETE",
       headers: {
@@ -119,6 +129,7 @@ const ChecklistsPage = () => {
     console.log(id);
   }
 
+
   return (
     <BaseBody>
       <div className="container-fluid">
@@ -129,13 +140,14 @@ const ChecklistsPage = () => {
               checklists={checklists}
               onClickList={onClickList}
               onAddList={onAddList}
+              onDeleteList={onDeleteList}
             />
           </div>
 
           <div className="col-md-9">
             <ChecklistItems
               items={displayedItems}
-              onDelete={onDelete}
+              onDelete={onDeleteItem}
               onDetail={onDetail}
             />
           </div>
