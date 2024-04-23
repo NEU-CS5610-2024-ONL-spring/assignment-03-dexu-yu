@@ -215,22 +215,33 @@ const ChecklistsPage = () => {
       <div className="container-fluid">
         <div className="row">
           <div className="col-md-3">
-            <Checklists
-              currentListId={currentListId}
-              checklists={checklists}
-              onClickList={onClickList}
-              onAddList={onAddList}
-              onDeleteList={onDeleteList}
-            />
+            {checklists ? (
+               <Checklists
+                 currentListId={currentListId}
+                 checklists={checklists}
+                 onClickList={onClickList}
+                 onAddList={onAddList}
+                 onDeleteList={onDeleteList}
+               />
+             ) : (
+               <div>
+                 Loading...
+               </div>
+             )} 
           </div>
-
           <div className="col-md-9">
-            <ChecklistItems
-              items={displayedItems}
-              onDelete={onDeleteItem}
-              onDetail={onDetail}
-              onUpdate={onUpdateItem}
-            />
+            {displayedItems ? (
+              <ChecklistItems
+                items={displayedItems}
+                onDelete={onDeleteItem}
+                onDetail={onDetail}
+                onUpdate={onUpdateItem}
+              />
+            ) : (
+              <div>
+                Loading...
+              </div>
+            )}
           </div>
         </div>
       </div>

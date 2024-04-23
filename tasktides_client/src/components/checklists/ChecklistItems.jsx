@@ -6,20 +6,20 @@ const ChecklistItems = ({ items, onDetail, onDelete, onUpdate }) => {
     const item = items.find((item) => item.id === id);
     onUpdate(id, { ...item, completed: !item.completed });
   };
+
   const onImportant = (id) => {
     const item = items.find((item) => item.id === id);
     onUpdate(id, { ...item, important: !item.important });
   }
+
   return (
   <>
     {items.map((item) => (
       <div key={item.id} className={`card mt-2 ${item.important ? 'border-start border-warning border-4' : ''}`}>
-
         <div className="card-header d-flex justify-content-between align-items-center">
           <span>{item.due}</span>
           <button type="button" className="btn-close" aria-label="Delete" onClick={() => onDelete(item.id)}></button>
         </div>
-
         <div className="card-body">
           <button
             type="button"
@@ -35,10 +35,6 @@ const ChecklistItems = ({ items, onDetail, onDelete, onUpdate }) => {
           >
             {item.title}
           </button>
-
-
-          <p className="card-text">{item.content}</p>
-
           <div className="d-flex justify-content-end align-items-center">
             <div className="form-check form-switch me-2">
               <input
@@ -49,14 +45,16 @@ const ChecklistItems = ({ items, onDetail, onDelete, onUpdate }) => {
                 onChange={() => onImportant(item.id)}
                 style={{
                   backgroundColor: item.important ? '#ffc107' : '',
-                  borderColor: item.important ? '#ffc107' : '#ced4da', // Bootstrap's default border color
+                  borderColor: item.important ? '#ffc107' : '#ced4da',
                   boxShadow: item.important ? '0 0 0 0.2rem rgba(255, 193, 7, 0.5)' : 'none'
                 }}
               />
               <label className="form-check-label" htmlFor={`importantSwitch${item.id}`}></label>
             </div>
-
-            <button onClick={() => onFinish(item.id)} className={`btn ${item.completed ? 'btn-primary' : 'btn-outline-primary'} me-2`}>
+            <button
+              onClick={() => onFinish(item.id)}
+              className={`btn ${item.completed ? 'btn-primary' : 'btn-outline-primary'} me-2`}
+            >
               {item.completed ? 'Undo' : 'Finish'}
             </button>
           </div>
