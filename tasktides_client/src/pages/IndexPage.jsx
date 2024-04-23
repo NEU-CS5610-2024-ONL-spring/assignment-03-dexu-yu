@@ -1,12 +1,27 @@
 import React from "react";
 
-import BaseBody from "../templates/BaseBody.jsx";
+import { useAuth0 } from "@auth0/auth0-react";
+import { useNavigate } from "react-router-dom";
 
 const IndexPage = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated, loginWithRedirect } = useAuth0();
+  // const signUp = () => loginWithRedirect({ screen_hint: "signup" });
+
   return (
-    <BaseBody>
-      <h1>IndexPage</h1>
-    </BaseBody>
+    <div className="home">
+      <div>
+        {isAuthenticated ? (
+          <button className="btn-primary" onClick={() => navigate("/app")}>
+            Enter App
+          </button>
+        ) : (
+          <button className="btn-primary" onClick={loginWithRedirect}>
+            Log In
+          </button>
+        )}
+      </div>
+    </div>
   );
 };
 

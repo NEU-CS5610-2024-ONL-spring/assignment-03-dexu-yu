@@ -8,10 +8,21 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id         Int         @id @default(autoincrement())
+  email      String      @unique
+  auth0Id    String      @unique @default("")
+  name       String?
+  avatar     String?
+  checklists Checklist[]
+}
+
 model Checklist {
-  id             Int              @id @default(autoincrement())
-  title          String           @db.VarChar(50)
-  ChecklistsItem ChecklistsItem[]
+  id              Int              @id @default(autoincrement())
+  title           String           @db.VarChar(50)
+  checklistsItems ChecklistsItem[]
+  userId          Int
+  user            User             @relation(fields: [userId], references: [id])
 }
 
 model ChecklistsItem {
@@ -21,6 +32,6 @@ model ChecklistsItem {
   content     String    @db.Text
   important   Boolean   @default(false)
   completed   Boolean   @default(false)
-  checklist   Checklist @relation(fields: [checklistId], references: [id])
   checklistId Int
+  checklist   Checklist @relation(fields: [checklistId], references: [id])
 }

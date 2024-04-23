@@ -70,7 +70,10 @@ const Checklists = ({ currentListId, checklists, onClickList, onAddList, onDelet
                 data-bs-dismiss="modal"
               />
             </div>
-            <form onSubmit={onAddList}>
+            <form onSubmit={(e) => {
+              e.preventDefault();
+              onAddList(e.target.title.value);
+            }}>
               <div className="modal-body">
                 <div className="mb-3">
                   <label htmlFor="newListName" className="form-label">List Name</label>

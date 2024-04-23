@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 
-import BaseBody from "../templates/BaseBody.jsx";
-
 import Checklists from "../components/checklists/Checklists.jsx";
 import ChecklistItems from "../components/checklists/ChecklistItems.jsx";
 import ChecklistItemInputForm from "../components/checklists/ChecklistItemInputForm.jsx";
+
+import { useAuthToken } from "../hooks/AuthTokenContext";
 
 const ChecklistsPage = () => {
 
@@ -15,36 +15,42 @@ const ChecklistsPage = () => {
   const [items, setItems] = useState([]);
   const [displayedItems, setDisplayedItems] = useState([]);
 
+  const { accessToken } = useAuthToken();
+
   useEffect(() => {
     const getChecklistsFromApi = async () => {
       const data = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/checklists`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
       });
       const res = await data.json();
       setChecklists(res);
+      getItemsFromApi(res.map(list => list.id));
     };
 
-    const getItemsFromApi = async () => {
-      const data = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/clItems`, {
-        method: "GET",
+    const getItemsFromApi = async (checklistIds) => {
+      const response = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/checklist-items`, {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
+        body: JSON.stringify({ checklistIds }),
       });
-      const res = await data.json();
-      setItems(res);
+      const items = await response.json();
+      setItems(items);
     };
 
+
     getChecklistsFromApi();
-    getItemsFromApi();
 
     setCurrentListId(-1);
     setDisplayedItems(items);
   }, []);
-  
+
   useEffect(() => {
     if (currentListId === -1) {
       setDisplayedItems(items);
@@ -57,13 +63,12 @@ const ChecklistsPage = () => {
     setCurrentListId(id);
   };
 
-  const onAddList = async (e) => {
-    e.prevenDefault();
-    const title = e.target.title.value;
+  const onAddList = async (title) => {
     const data = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/checklist`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
         title,
@@ -89,6 +94,7 @@ const ChecklistsPage = () => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
       });
   
@@ -102,6 +108,7 @@ const ChecklistsPage = () => {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
       });
   
@@ -140,6 +147,7 @@ const ChecklistsPage = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
         checklistId,
@@ -170,6 +178,7 @@ const ChecklistsPage = () => {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
       },
     });
     if (data.ok) {
@@ -183,6 +192,7 @@ const ChecklistsPage = () => {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify(newItem),
       });
@@ -202,7 +212,7 @@ const ChecklistsPage = () => {
 
 
   return (
-    <BaseBody>
+    <>
       <div className="container-fluid">
         <div className="row">
           <div className="col-md-3">
@@ -239,7 +249,7 @@ const ChecklistsPage = () => {
         currentListId={currentListId}
         onAddItem={onAddItem}
       />
-    </BaseBody>
+    </>
   );
 };
 

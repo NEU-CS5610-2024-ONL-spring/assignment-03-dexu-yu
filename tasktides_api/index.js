@@ -1,7 +1,16 @@
+import * as dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import pkg from "@prisma/client";
 import morgan from "morgan";
 import cors from "cors";
+import { auth } from "express-oauth2-jwt-bearer";
+
+const requireAuth = auth({
+  audience: process.env.AUTH0_AUDIENCE,
+  issuerBaseURL: process.env.AUTH0_ISSUER,
+  tokenSigningAlg: "RS256",
+});
 
 const app = express();
 
@@ -20,38 +29,41 @@ app.get("/ping", (req, res) => {
 // Checklists
 
 // Get all the checklists
-app.get("/checklists", async (req, res) => {
-  try {
-    const checklists = await prisma.Checklist.findMany({});
-    res.status(200).json(checklists);
-  } catch (err) {
-    console.log("Can't get checklists!", err);
-    res.status(500).json({
-      message: "Can't get all the checklists!",
-    });
-  }
+app.get("/checklists", requireAuth, async (req, res) => {
+  const auth0Id = req.auth.payload.sub;
+
+  const user = await prisma.user.findUnique({
+    where: {
+      auth0Id,
+    },
+  });
+  const checklists = await prisma.Checklist.findMany({
+    where: {
+      userId: user.id,
+    },
+  });
+  res.status(200).json(checklists);
 });
 
 // Add a checklist
-app.post("/checklist", async (req, res) => {
-  try {
-    const { title } = req.body;
-    const checklist = await prisma.Checklist.create({
-      data: {
-        title,
-      },
-    });
-    res.status(200).json(checklist);
-  } catch (err) {
-    console.log("Can't create the checklist", err);
-    res.status(500).json({
-      message: "Can't create the checklist!",
-    });
+app.post("/checklist", requireAuth, async (req, res) => {
+  const { title } = req.body;
+  if (!title) {
+    res.status(400).send("Title can't be empty!");
+    return;
   }
+  const auth0Id = req.auth.payload.sub;
+  const checklist = await prisma.Checklist.create({
+    data: {
+      title,
+      user: { connect: { auth0Id } },
+    },
+  });
+  res.status(200).json(checklist);
 });
 
 // Delete a checklist by id
-app.delete("/checklist/:id", async (req, res) => {
+app.delete("/checklist/:id", requireAuth, async (req, res) => {
   try {
     const id = +req.params.id;
     const checklist = await prisma.Checklist.delete({
@@ -69,7 +81,7 @@ app.delete("/checklist/:id", async (req, res) => {
 });
 
 // Delete all checklist items by checklistId
-app.delete('/checklist/:checklistId/items', async (req, res) => {
+app.delete('/checklist/:checklistId/items', requireAuth, async (req, res) => {
   try {
     const checklistId = parseInt(req.params.checklistId, 10);
     const checklistExists = await prisma.Checklist.findUnique({
@@ -98,8 +110,42 @@ app.delete('/checklist/:checklistId/items', async (req, res) => {
 
 // ChecklistsItems
 
+
+// Get all items from a list of checklists
+app.post("/checklist-items", requireAuth, async (req, res) => {
+  const checklistIds = req.body.checklistIds;
+
+  console.log("checklistIds", checklistIds);
+
+  if (!checklistIds) {
+    return res.status(400).json({ message: "Not provide checklistIds." });
+  }
+
+  if (!checklistIds.length) {
+    console.log("No checklist items found");
+    return res.status(200).json([]);
+  }
+
+  try {
+    const checklistItems = await prisma.checklistsItem.findMany({
+      where: {
+        checklistId: {
+          in: checklistIds,
+        },
+      },
+    });
+    console.log("checklistItems", checklistItems);
+
+    res.status(200).json(checklistItems);
+  } catch (error) {
+    console.error("Error fetching checklist items: ", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // Get all the checklists items
-app.get("/clitems", async (req, res) => {
+app.get("/clitems", requireAuth, async (req, res) => {
+  const checklists = req.body;
   try {
     const items = await prisma.ChecklistsItem.findMany({});
     res.status(200).json(items);
@@ -112,7 +158,7 @@ app.get("/clitems", async (req, res) => {
 });
 
 // Get a checklists item by id
-app.get("/clitems/:id", async (req, res) => {
+app.get("/clitems/:id", requireAuth, async (req, res) => {
   try {
     const id = req.params.id;
     const item = await prisma.ChecklistsItem.findUnique({
@@ -130,7 +176,7 @@ app.get("/clitems/:id", async (req, res) => {
 })
 
 // Add a checklists item
-app.post("/clitem", async (req, res) => {
+app.post("/clitem", requireAuth, async (req, res) => {
   try {
     const { checklistId, title, due, content, important, completed } = req.body;
     const item = await prisma.ChecklistsItem.create({
@@ -152,7 +198,8 @@ app.post("/clitem", async (req, res) => {
   }
 });
 
-app.put("/clitem/:id", async (req, res) => {
+// Update a checklists item
+app.put("/clitem/:id", requireAuth, async (req, res) => {
   const { id } = req.params;
   const { title, due, content, important, completed } = req.body;
 
@@ -177,7 +224,7 @@ app.put("/clitem/:id", async (req, res) => {
 });
 
 // Delete a checklists item
-app.delete("/clitem/:id", async (req, res) => {
+app.delete("/clitem/:id", requireAuth, async (req, res) => {
   try {
     const id = +req.params.id;
     const item = await prisma.ChecklistsItem.delete({
@@ -192,6 +239,65 @@ app.delete("/clitem/:id", async (req, res) => {
       message: "Can't delete checklists item",
     });
   }
+});
+
+// Verify user
+app.post("/verify-user", requireAuth, async (req, res) => {
+  const auth0Id = req.auth.payload.sub;
+  const email = req.auth.payload[`${process.env.AUTH0_AUDIENCE}/email`];
+  const name = req.auth.payload[`${process.env.AUTH0_AUDIENCE}/name`];
+
+  const user = await prisma.user.findUnique({
+    where: {
+      auth0Id,
+    },
+  });
+
+  if (user) {
+    res.json(user);
+  } else {
+    const newUser = await prisma.user.create({
+      data: {
+        email,
+        auth0Id,
+        name,
+        avatar: `${process.env.DEFAULT_AVATAR}`,
+      },
+    });
+
+    res.json(newUser);
+  }
+});
+
+// Get profile
+app.get("/profile", requireAuth, async (req, res) => {
+  const auth0Id = req.auth.payload.sub;
+
+  const user = await prisma.user.findUnique({
+    where: {
+      auth0Id,
+    },
+  });
+
+  res.json(user);
+});
+
+// Update profile
+app.put("/profile", requireAuth, async (req, res) => {
+  const auth0Id = req.auth.payload.sub;
+  const { name, avatar } = req.body;
+
+  const user = await prisma.user.update({
+    where: {
+      auth0Id,
+    },
+    data: {
+      name,
+      avatar,
+    },
+  });
+
+  res.json(user);
 });
 
 app.listen(8000, () => {
