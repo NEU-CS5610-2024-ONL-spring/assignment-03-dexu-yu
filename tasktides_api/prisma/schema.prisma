@@ -1,0 +1,37 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native"]
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int         @id @default(autoincrement())
+  email      String      @unique
+  auth0Id    String      @unique @default("")
+  name       String?
+  avatar     String?
+  checklists Checklist[]
+}
+
+model Checklist {
+  id              Int              @id @default(autoincrement())
+  title           String           @db.VarChar(50)
+  checklistsItems ChecklistsItem[]
+  userId          Int
+  user            User             @relation(fields: [userId], references: [id])
+}
+
+model ChecklistsItem {
+  id          Int       @id @default(autoincrement())
+  title       String    @db.VarChar(50)
+  due         String    @db.VarChar(50)
+  content     String    @db.Text
+  important   Boolean   @default(false)
+  completed   Boolean   @default(false)
+  checklistId Int
+  checklist   Checklist @relation(fields: [checklistId], references: [id])
+}
