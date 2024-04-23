@@ -2,6 +2,8 @@
 
 import React, { useEffect, useState } from "react";
 
+import { useNavigate } from "react-router-dom";
+
 import Checklists from "../components/checklists/Checklists.jsx";
 import ChecklistItems from "../components/checklists/ChecklistItems.jsx";
 import ChecklistItemInputForm from "../components/checklists/ChecklistItemInputForm.jsx";
@@ -15,6 +17,7 @@ const ChecklistsPage = () => {
   const [items, setItems] = useState([]);
   const [displayedItems, setDisplayedItems] = useState([]);
 
+  const navigate = useNavigate();
   const { accessToken } = useAuthToken();
 
   useEffect(() => {
@@ -140,9 +143,6 @@ const ChecklistsPage = () => {
     const important = e.target.important.checked ? true : false;
     const completed = e.target.completed.checked ? true : false;
 
-    console.log(e.target.important.value, e.target.completed.value);
-    console.log(checklistId, title, due, important, completed);
-
     const data = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/clitem`, {
       method: "POST",
       headers: {
@@ -207,9 +207,8 @@ const ChecklistsPage = () => {
   };
 
   const onDetail = (id) => {
-    console.log(id);
+    navigate(`/app/clitem/${id}`);
   }
-
 
   return (
     <>

@@ -60,7 +60,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             >
               <Route path="checklists" element={<ChecklistsPage />} />
               <Route path="profile" element={<ProfilePage />} />
-              <Route path="checklists/:checklistsItemId" element={<ChecklistsItemPage />} />
+              <Route path="clitem/:itemId" element={<ChecklistsItemPage />} />
               <Route path="debug" element={<DebugPage />} />
               <Route path="*" element={<ErrorPage />} />
             </Route>

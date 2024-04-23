@@ -158,9 +158,9 @@ app.get("/clitems", requireAuth, async (req, res) => {
 });
 
 // Get a checklists item by id
-app.get("/clitems/:id", requireAuth, async (req, res) => {
+app.get("/clitem/:id", requireAuth, async (req, res) => {
   try {
-    const id = req.params.id;
+    const id = +req.params.id;
     const item = await prisma.ChecklistsItem.findUnique({
       where: {
         id,
