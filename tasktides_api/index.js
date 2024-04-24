@@ -363,7 +363,7 @@ app.post("/verify-user", requireAuth, async (req, res) => {
         email,
         auth0Id,
         name,
-        avatar: `${process.env.DEFAULT_AVATAR}`,
+        avatar: `${process.env.DEFAULT_AVATAR_URL}`,
       },
     });
 

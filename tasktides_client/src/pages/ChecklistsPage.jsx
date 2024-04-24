@@ -1,5 +1,3 @@
-//TODO: only valid input modals should disappear
-
 import React, { useEffect, useState } from "react";
 
 import { useNavigate } from "react-router-dom";

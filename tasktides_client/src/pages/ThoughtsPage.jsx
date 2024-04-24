@@ -22,7 +22,6 @@ const ThoughtsPage = () => {
         const data = await res.json();
         setThoughts(data);
       } catch (err) {
-        alert('Failed to fetch thoughts.');
         console.error(err);
       }
     };
