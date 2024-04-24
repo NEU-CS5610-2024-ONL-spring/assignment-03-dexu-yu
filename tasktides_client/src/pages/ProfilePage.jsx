@@ -9,8 +9,8 @@ const ProfilePage = () => {
   const { user, isLoading, logout } = useAuth0();
   const { accessToken } = useAuthToken();
 
-  const [name, setName] = useState();
-  const [avatar, setAvatar] = useState();
+  const [name, setName] = useState("");
+  const [avatar, setAvatar] = useState("");
 
   useEffect(() => {
     const getProfile = async () => {
