@@ -1,11 +1,13 @@
 generator client {
   provider      = "prisma-client-js"
+  previewFeatures = ["referentialIntegrity"]
   binaryTargets = ["native"]
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
+  previewFeatures = ["referentialIntegrity"]
 }
 
 model User {
