@@ -46,9 +46,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <AuthTokenProvider>
         <BrowserRouter>
           <Routes>
+            <Route path="/debug" element={<DebugPage />} />
             <Route path="/" element={<IndexPage />} />
             <Route path="/verify-user" element={<VerifyUser />} />  
-            <Route path="debug" element={<DebugPage />} />
             <Route
               path="app"
               element={
