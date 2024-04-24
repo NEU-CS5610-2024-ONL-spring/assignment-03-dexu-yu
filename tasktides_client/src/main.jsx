@@ -48,6 +48,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Routes>
             <Route path="/" element={<IndexPage />} />
             <Route path="/verify-user" element={<VerifyUser />} />  
+            <Route path="debug" element={<DebugPage />} />
             <Route
               path="app"
               element={
@@ -61,9 +62,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
               <Route path="thoughts" element={<ThoughtsPage />} />
               <Route path="profile" element={<ProfilePage />} />
               <Route path="clitem/:itemId" element={<ChecklistsItemPage />} />
-              <Route path="debug" element={<DebugPage />} />
+              <Route path="*" element={<ErrorPage />} />
             </Route>
-            <Route path="*" element={<ErrorPage />} />
           </Routes>
         </BrowserRouter>
       </AuthTokenProvider>
