@@ -115,8 +115,6 @@ app.delete('/checklist/:checklistId/items', requireAuth, async (req, res) => {
 app.post("/checklist-items", requireAuth, async (req, res) => {
   const checklistIds = req.body.checklistIds;
 
-  console.log("checklistIds", checklistIds);
-
   if (!checklistIds) {
     return res.status(400).json({ message: "Not provide checklistIds." });
   }
@@ -134,7 +132,6 @@ app.post("/checklist-items", requireAuth, async (req, res) => {
         },
       },
     });
-    console.log("checklistItems", checklistItems);
 
     res.status(200).json(checklistItems);
   } catch (error) {
@@ -200,12 +197,12 @@ app.post("/clitem", requireAuth, async (req, res) => {
 
 // Update a checklists item
 app.put("/clitem/:id", requireAuth, async (req, res) => {
-  const { id } = req.params;
+  const id = +req.params.id;
   const { title, due, content, important, completed } = req.body;
 
   try {
     const updatedItem = await prisma.checklistsItem.update({
-      where: { id: parseInt(id, 10) },
+      where: { id },
       data: {
         title,
         due,
@@ -237,6 +234,82 @@ app.delete("/clitem/:id", requireAuth, async (req, res) => {
     console.log("Can't delete the checklists item", err);
     res.status(500).json({
       message: "Can't delete checklists item",
+    });
+  }
+});
+
+// Get all my thoughts
+app.get("/thoughts", requireAuth, async (req, res) => {
+  const auth0Id = req.auth.payload.sub;
+
+  const user = await prisma.user.findUnique({
+    where: {
+      auth0Id,
+    },
+  });
+  const checklists = await prisma.Thought.findMany({
+    where: {
+      userId: user.id,
+    },
+  });
+  res.status(200).json(checklists);
+});
+
+// Add a thought
+app.post("/thought", requireAuth, async (req, res) => {
+  const { content, pub } = req.body;
+  if (!content || content.length > 250) {
+    res.status(400).send("Title can't be empty or too long...");
+    return;
+  }
+  const auth0Id = req.auth.payload.sub;
+  const thought = await prisma.Thought.create({
+    data: {
+      content,
+      pub,
+      user: { connect: { auth0Id } },
+    },
+  });
+  res.status(200).json(thought);
+});
+
+// Update a thought (only public/private)
+app.put("/thought/:id", requireAuth, async (req, res) => {
+  const id = +req.params.id;
+  const { pub } = req.body;
+
+  try {
+    const updatedThought = await prisma.Thought.update({
+      where: {
+        id,
+      },
+      data: {
+        pub,
+      },
+    });
+    res.status(200).json(updatedThought);
+  } catch (err) {
+    console.error("Error updating the thought", err);
+    res.status(500).json({
+      message: "Error updating thought",
+    });
+  }
+});
+
+// Delete a thought by id
+app.delete("/thought/:id", requireAuth, async (req, res) => {
+  try {
+    const id = +req.params.id;
+    const thought = await prisma.Thought.delete({
+      where: {
+        id,
+      },
+    });
+    res.status(200).json(thought);
+  } catch (err) {
+    console.log("Can't delete the thought", err);
+    res.status(500).json({
+      message: "Can't delete the thought!",
     });
   }
 });

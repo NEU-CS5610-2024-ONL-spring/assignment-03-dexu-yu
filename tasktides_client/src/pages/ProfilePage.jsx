@@ -9,25 +9,25 @@ const ProfilePage = () => {
   const { user, isLoading, logout } = useAuth0();
   const { accessToken } = useAuthToken();
 
-  const [name, setName] = useState(user?.name || '');
-  const [avatar, setAvatar] = useState(user?.picture || '');
+  const [name, setName] = useState();
+  const [avatar, setAvatar] = useState();
 
   useEffect(() => {
     const getProfile = async () => {
-      const data = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/profile`, {
+      const res = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/profile`, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      if (data.ok) {
-        const profile = await data.json();
+      if (res.ok) {
+        const profile = await res.json();
         setName(profile.name);
         setAvatar(profile.avatar);
       }
     };
     getProfile();
-  }, [user]);
+  }, [accessToken]);
 
   const handleNameChange = (e) => setName(e.target.value);
   const handleAvatarChange = (e) => setAvatar(e.target.value);

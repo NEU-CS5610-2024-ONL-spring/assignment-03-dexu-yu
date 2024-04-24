@@ -1,5 +1,7 @@
 import React from "react";
 
+import RandomThoughts from "../components/thoughts/RandomThoughts";
+
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
 
@@ -9,7 +11,7 @@ const IndexPage = () => {
   // const signUp = () => loginWithRedirect({ screen_hint: "signup" });
 
   return (
-    <div className="home">
+    <>
       <div>
         {isAuthenticated ? (
           <button className="btn-primary" onClick={() => navigate("app/checklists")}>
@@ -21,7 +23,8 @@ const IndexPage = () => {
           </button>
         )}
       </div>
-    </div>
+      <RandomThoughts />
+    </>
   );
 };
 

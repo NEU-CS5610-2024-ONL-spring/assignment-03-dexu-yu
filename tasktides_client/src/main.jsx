@@ -59,13 +59,14 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                 </RequireAuth>
               }
             >
+              <Route path="" element={<ChecklistsPage />} />
               <Route path="checklists" element={<ChecklistsPage />} />
               <Route path="thoughts" element={<ThoughtsPage />} />
               <Route path="profile" element={<ProfilePage />} />
               <Route path="clitem/:itemId" element={<ChecklistsItemPage />} />
               <Route path="debug" element={<DebugPage />} />
-              <Route path="*" element={<ErrorPage />} />
             </Route>
+            <Route path="*" element={<ErrorPage />} />
           </Routes>
         </BrowserRouter>
       </AuthTokenProvider>

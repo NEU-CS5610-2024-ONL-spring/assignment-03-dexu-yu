@@ -15,6 +15,7 @@ model User {
   name       String?
   avatar     String?
   checklists Checklist[]
+  thoughts   Thought[]
 }
 
 model Checklist {
@@ -34,4 +35,13 @@ model ChecklistsItem {
   completed   Boolean   @default(false)
   checklistId Int
   checklist   Checklist @relation(fields: [checklistId], references: [id])
+}
+
+model Thought {
+  id        Int       @id @default(autoincrement())
+  pub       Boolean   @default(false)
+  created   DateTime  @default(now())
+  content   String    @db.Text
+  userId    Int
+  user      User      @relation(fields: [userId], references: [id])
 }

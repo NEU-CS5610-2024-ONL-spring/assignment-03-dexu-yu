@@ -68,116 +68,60 @@ const ChecklistItemPage = () => {
   }
 
   return (
-  <div className="container py-5">
-    <div className="row mb-4">
-      <div className="col">
-        {editMode ? (
-          <>
-            <div className="mb-3">
-              <input
-                type="text"
-                value={editedItem.title}
-                onChange={handleInputChange}
-                name="title"
-                className="form-control form-control-lg mb-3"
-                autoComplete="off"
-              />
-            </div>
-            <div className="mb-3">
-              <textarea
-                value={editedItem.content}
-                onChange={handleInputChange}
-                name="content"
-                className="form-control"
-                rows="10"
-              ></textarea>
-            </div>
-            <div className="mb-3">
-              <input
-                type="date"
-                value={editedItem.due}
-                onChange={handleInputChange}
-                name="due"
-                className="form-control mb-3"
-                autoComplete="off"
-              />
-            </div>
-            <div className="d-flex justify-content-end">
-              <button onClick={onSave} className="btn btn-primary me-2">Save</button>
-              <button onClick={() => setEditMode(false)} className="btn btn-secondary">Cancel</button>
-            </div>
-          </>
-        ) : (
-          <>
-            <h1 className="mb-1">{item.title}</h1>
-            <div className="markdown-body bg-light p-3 border rounded" dangerouslySetInnerHTML={{ __html: mdText }} />
-            <p className="text-muted"><small>Due by: {item.due}</small></p>
-            <div className="d-flex">
-              <button className="btn btn-primary me-2" onClick={() => setEditMode(true)}>Edit</button>
-              <button className="btn btn-outline-secondary" onClick={() => navigate(-1)}>Go Back</button>
-            </div>
-          </>
-        )}
-      </div>
-    </div>
-  </div>
-);
-
-
-  /*
-  return (
-    <div className='container py-5'>
-      <div className='card'>
-        <div className='card-body'>
-          {item && !editMode ? (
+    <div className="container py-5">
+      <div className="row mb-4">
+        <div className="col">
+          {editMode ? (
             <>
-              <h5 className='card-title'>{item.title}</h5>
-              <div dangerouslySetInnerHTML={{ __html: mdText }}></div>
-              <p className='card-text'>
-                <small className='text-muted'>Due by: {item.due}</small>
-              </p>
-              <div className="d-flex justify-content-start mt-3">
-                <button className="btn btn-primary me-2" onClick={() => setEditMode(true)}>Edit</button>
-                <button className="btn btn-light" onClick={() => navigate(-1)}>Go Back</button>
+              <div className="mb-3">
+                <input
+                  type="text"
+                  value={editedItem.title}
+                  onChange={handleInputChange}
+                  name="title"
+                  className="form-control form-control-lg mb-3"
+                  autoComplete="off"
+                />
               </div>
-            </>
-          ) : editMode ? (
-            <>
-              <input 
-                type='text' 
-                value={editedItem.title}
-                onChange={handleInputChange}
-                name='title'
-                className='form-control mb-2'
-                autoComplete='off'
-              />
-              <textarea 
-                value={editedItem.content}
-                onChange={handleInputChange}
-                name='content'
-                className='form-control mb-2'
-              />
-              <input 
-                type='date' 
-                value={editedItem.due}
-                onChange={handleInputChange}
-                name='due'
-                className='form-control mb-2'
-                autoComplete='off'
-              />
-              <div className="d-flex justify-content-end mt-3">
+              <div className="mb-3">
+                <textarea
+                  value={editedItem.content}
+                  onChange={handleInputChange}
+                  name="content"
+                  className="form-control"
+                  rows="10"
+                ></textarea>
+              </div>
+              <div className="mb-3">
+                <input
+                  type="date"
+                  value={editedItem.due}
+                  onChange={handleInputChange}
+                  name="due"
+                  className="form-control mb-3"
+                  autoComplete="off"
+                />
+              </div>
+              <div className="d-flex justify-content-end">
                 <button onClick={onSave} className="btn btn-primary me-2">Save</button>
                 <button onClick={() => setEditMode(false)} className="btn btn-secondary">Cancel</button>
               </div>
             </>
           ) : (
-            <p>Loading item...</p>
+            <>
+              <h1 className="mb-1">{item.title}</h1>
+              <div className="markdown-body bg-light p-3 border rounded" dangerouslySetInnerHTML={{ __html: mdText }} />
+              <p className="text-muted"><small>Due by: {item.due}</small></p>
+              <div className="d-flex">
+                <button className="btn btn-primary me-2" onClick={() => setEditMode(true)}>Edit</button>
+                <button className="btn btn-secondary" onClick={() => navigate(-1)}>Go Back</button>
+              </div>
+            </>
           )}
         </div>
       </div>
     </div>
   );
-  */
 };
 
 export default ChecklistItemPage;

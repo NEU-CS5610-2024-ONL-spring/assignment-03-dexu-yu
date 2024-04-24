@@ -35,7 +35,7 @@ const ChecklistsPage = () => {
     };
 
     const getItemsFromApi = async (checklistIds) => {
-      const response = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/checklist-items`, {
+      const res = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/checklist-items`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -43,7 +43,7 @@ const ChecklistsPage = () => {
         },
         body: JSON.stringify({ checklistIds }),
       });
-      const items = await response.json();
+      const items = await res.json();
       setItems(items);
     };
 
