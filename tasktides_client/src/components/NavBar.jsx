@@ -13,6 +13,7 @@ const NavBar = () => {
         <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div className="navbar-nav">
             <NavLink className="nav-link" to="/app/checklists">Checklists</NavLink>
+            <NavLink className="nav-link" to="/app/thoughts">Thoughts</NavLink>
             <NavLink className="nav-link" to="/app/profile">Profile</NavLink>
           </div>
         </div>

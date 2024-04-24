@@ -9,6 +9,7 @@ import { AuthTokenProvider } from "./hooks/AuthTokenContext";
 
 import IndexPage from "./pages/IndexPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
+import ThoughtsPage from "./pages/ThoughtsPage.jsx";
 import ChecklistsPage from "./pages/ChecklistsPage.jsx";
 import ChecklistsItemPage from "./pages/ChecklistsItemPage.jsx";
 import ErrorPage from "./pages/ErrorPage.jsx";
@@ -59,6 +60,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
               }
             >
               <Route path="checklists" element={<ChecklistsPage />} />
+              <Route path="thoughts" element={<ThoughtsPage />} />
               <Route path="profile" element={<ProfilePage />} />
               <Route path="clitem/:itemId" element={<ChecklistsItemPage />} />
               <Route path="debug" element={<DebugPage />} />

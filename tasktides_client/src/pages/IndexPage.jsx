@@ -12,7 +12,7 @@ const IndexPage = () => {
     <div className="home">
       <div>
         {isAuthenticated ? (
-          <button className="btn-primary" onClick={() => navigate("/app")}>
+          <button className="btn-primary" onClick={() => navigate("app/checklists")}>
             Enter App
           </button>
         ) : (

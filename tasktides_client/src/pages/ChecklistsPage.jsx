@@ -22,16 +22,16 @@ const ChecklistsPage = () => {
 
   useEffect(() => {
     const getChecklistsFromApi = async () => {
-      const data = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/checklists`, {
+      const res = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/checklists`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      const res = await data.json();
-      setChecklists(res);
-      getItemsFromApi(res.map(list => list.id));
+      const data = await res.json();
+      setChecklists(data);
+      getItemsFromApi(data.map(list => list.id));
     };
 
     const getItemsFromApi = async (checklistIds) => {
@@ -47,12 +47,11 @@ const ChecklistsPage = () => {
       setItems(items);
     };
 
-
     getChecklistsFromApi();
 
     setCurrentListId(-1);
     setDisplayedItems(items);
-  }, []);
+  }, [accessToken]);
 
   useEffect(() => {
     if (currentListId === -1) {
