@@ -47,7 +47,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<IndexPage />} />
-            <Route path="verify-user" element={<VerifyUser />} />  
+            <Route path="/verify-user" element={<VerifyUser />} />  
             <Route
               path="app"
               element={
