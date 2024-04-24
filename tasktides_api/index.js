@@ -255,6 +255,34 @@ app.get("/thoughts", requireAuth, async (req, res) => {
   res.status(200).json(checklists);
 });
 
+// Get 10 latest public thoughts
+app.get("/thoughts/recent", async (req, res) => {
+  try {
+    const thoughts = await prisma.thought.findMany({
+      where: {
+        pub: true,
+      },
+      take: 10,
+      orderBy: {
+        created: 'desc',
+      },
+      include: {
+        user: {
+          select: {
+            name: true,
+            avatar: true,
+          }
+        }
+      }
+    });
+
+    res.status(200).json(thoughts);
+  } catch (error) {
+    console.error("Error fetching recent thoughts: ", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // Add a thought
 app.post("/thought", requireAuth, async (req, res) => {
   const { content, pub } = req.body;
@@ -272,6 +300,7 @@ app.post("/thought", requireAuth, async (req, res) => {
   });
   res.status(200).json(thought);
 });
+
 
 // Update a thought (only public/private)
 app.put("/thought/:id", requireAuth, async (req, res) => {
