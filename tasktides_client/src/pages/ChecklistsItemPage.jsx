@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useAuthToken } from '../hooks/AuthTokenContext';
+import React, { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useAuthToken } from "../hooks/AuthTokenContext";
 
-import markdownit from 'markdown-it'
+import markdownit from "markdown-it";
 
 const ChecklistItemPage = () => {
   const [item, setItem] = useState(null);
-  const [mdText, setMdText] = useState('');
+  const [mdText, setMdText] = useState("");
   const [editMode, setEditMode] = useState(false);
   const [editedItem, setEditedItem] = useState({});
 
@@ -14,21 +14,22 @@ const ChecklistItemPage = () => {
   const { itemId } = useParams();
   const navigate = useNavigate();
 
-  const md = markdownit()
+  const md = markdownit();
 
   useEffect(() => {
     const getItem = async () => {
       const response = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/clitem/${itemId}`, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
       });
       const data = await response.json();
+      console.log(data);
       if (data) {
         setItem(data);
-        setMdText(md.render(data.content))
+        setMdText(md.render(data.content));
         setEditedItem(data);
       }
     };
@@ -41,9 +42,9 @@ const ChecklistItemPage = () => {
   const onSave = async () => {
     try {
       const res = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/clitem/${itemId}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify(editedItem),
@@ -54,7 +55,7 @@ const ChecklistItemPage = () => {
         setMdText(md.render(editedItem.content));
       }
     } catch (error) {
-      console.error('Error updating item:', error);
+      console.error("Error updating item:", error);
     }
     setEditMode(false);
   };

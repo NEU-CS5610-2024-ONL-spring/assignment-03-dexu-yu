@@ -1,10 +1,10 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React from "react";
+import PropTypes from "prop-types";
 
 const ThoughtInputForm = ({ onAdd }) => {
   return (
     <div className="container mt-4">
-      <form onSubmit={onAdd} autoComplete="off">
+      <form onSubmit={onAdd} autoComplete="off" aria-label="form" name="form">
         <div className="mb-3">
           <textarea
             className="form-control form-control-lg"
@@ -35,7 +35,7 @@ const ThoughtInputForm = ({ onAdd }) => {
       </form>
     </div>
   );
-}
+};
 
 ThoughtInputForm.propTypes = {
   onAdd: PropTypes.func.isRequired,

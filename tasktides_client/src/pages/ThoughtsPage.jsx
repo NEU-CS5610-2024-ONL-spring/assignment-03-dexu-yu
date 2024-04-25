@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-import MyThoughts from '../components/thoughts/MyThoughts';
-import ThoughtInputForm from '../components/thoughts/ThoughtInputForm';
+import MyThoughts from "../components/thoughts/MyThoughts";
+import ThoughtInputForm from "../components/thoughts/ThoughtInputForm";
 
-import { useAuthToken } from '../hooks/AuthTokenContext';
+import { useAuthToken } from "../hooks/AuthTokenContext";
 
 const ThoughtsPage = () => {
   const [thoughts, setThoughts] = useState([]);
@@ -13,7 +13,7 @@ const ThoughtsPage = () => {
     const getThoughtsFromApi = async () => {
       try {
         const res = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/thoughts`, {
-          method: 'GET',
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
@@ -32,30 +32,32 @@ const ThoughtsPage = () => {
     e.preventDefault();
     const content = e.target.content.value;
     const pub = e.target.pub.checked;
+    console.log("CLICK BUTTON!!!!", content, pub);
     try {
       const res = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/thought`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({ content, pub }),
       });
       const data = await res.json();
       setThoughts((prev) => [data, ...prev]);
+      e.target.reset();
     } catch (err) {
-      alert('Failed to post thought.');
+      alert("Failed to post thought.");
       console.error(err);
     }
-  }
+  };
 
   const onUpdate = async (id, pub) => {
     console.log(id, pub);
     try {
       const res = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/thought/${id}`, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({ pub }),
@@ -68,26 +70,26 @@ const ThoughtsPage = () => {
         return thought;
       }));
     } catch (err) {
-      alert('Failed to update thought.');
+      alert("Failed to update thought.");
       console.error(err);
     }
   };
 
   const onDelete = async (id) => {
-    if (!confirm('Are you sure you want to delete this thought?')) {
+    if (!confirm("Are you sure you want to delete this thought?")) {
       return;
     }
     try {
       await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/thought/${id}`, {
-        method: 'DELETE',
+        method: "DELETE",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
       });
       setThoughts((prev) => prev.filter((thought) => thought.id !== id));
     } catch (err) {
-      alert('Failed to delete thought.');
+      alert("Failed to delete thought.");
       console.error(err);
     }
   };

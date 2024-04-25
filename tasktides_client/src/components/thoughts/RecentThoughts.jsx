@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 const RecentThoughts = () => {
   const [thoughts, setThoughts] = useState([]);
@@ -6,18 +6,19 @@ const RecentThoughts = () => {
   useEffect(() => {
     const getThoughts = async () => {
       const res = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/thoughts/recent`, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       });
 
       if (!res.ok) {
-        console.error('Failed to fetch thoughts');
+        console.error("Failed to fetch thoughts");
         return;
       }
 
       const data = await res.json();
+      console.log(data);
       setThoughts(data);
     };
 
@@ -25,9 +26,9 @@ const RecentThoughts = () => {
   }, []);
 
   const formatDate = (dateString) => {
-    const options = { month: 'numeric', day: 'numeric', year: 'numeric' };
+    const options = { month: "numeric", day: "numeric", year: "numeric" };
     return new Date(dateString).toLocaleDateString(undefined, options);
-  }
+  };
 
   return (
     <div className="container py-3">
@@ -40,7 +41,7 @@ const RecentThoughts = () => {
                 src={thought.user.avatar}
                 alt="User Avatar"
                 className="rounded-circle me-2"
-                style={{ width: '40px', height: '40px', objectFit: 'cover' }}
+                style={{ width: "40px", height: "40px", objectFit: "cover" }}
               />
               <div>
                 <strong>{thought.user.name}</strong>

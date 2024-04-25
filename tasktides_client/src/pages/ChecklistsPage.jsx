@@ -63,7 +63,9 @@ const ChecklistsPage = () => {
     setCurrentListId(id);
   };
 
-  const onAddList = async (title) => {
+  const onAddList = async (e) => {
+    e.preventDefault();
+    const title = e.target.title.value;
     const data = await fetch(`${import.meta.env.VITE_TASKTIDES_API_URL}/checklist`, {
       method: "POST",
       headers: {
@@ -82,6 +84,7 @@ const ChecklistsPage = () => {
       }
       setChecklists([...checklists, newList]);
       setCurrentListId(newList.id);
+      e.target.reset();
     }
   };
 

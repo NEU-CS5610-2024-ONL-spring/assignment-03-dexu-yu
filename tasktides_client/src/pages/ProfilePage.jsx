@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-import LoadingPage from './LoadingPage';
+import LoadingPage from "./LoadingPage";
 import { useAuthToken } from "../hooks/AuthTokenContext";
 
-import { useAuth0 } from '@auth0/auth0-react';
+import { useAuth0 } from "@auth0/auth0-react";
 
 const ProfilePage = () => {
   const { user, isLoading, logout } = useAuth0();
@@ -62,7 +62,7 @@ const ProfilePage = () => {
       <div className="row justify-content-center">
         <div className="col-md-6">
           <div className="text-center mb-4">
-            <img src={avatar} alt="profile" className="rounded-circle img-fluid" style={{ width: '100px', height: '100px' }} />
+            <img src={avatar} alt="profile image" className="rounded-circle img-fluid" style={{ width: "100px", height: "100px" }} />
           </div>
           <form onSubmit={handleSubmit} autoComplete="off">
             <div className="form-group mb-3">
