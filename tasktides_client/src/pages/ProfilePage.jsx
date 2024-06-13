@@ -53,9 +53,15 @@ const ProfilePage = () => {
     }
   };
 
+  const onLogout = () => {
+    // console.log(window.location.origin);
+    logout({ logoutParams: { returnTo: window.location.origin } });
+  };
+
   if (isLoading) {
     return <LoadingPage />;
   }
+
 
   return (
     <div className="container my-4">
@@ -79,7 +85,7 @@ const ProfilePage = () => {
             </div>
             <div className="d-flex justify-content-center">
               <button type="submit" className="btn btn-primary me-2">Update</button>
-              <button type="button" className="btn btn-danger" onClick={() => logout({ returnTo: window.location.origin })}>
+              <button type="button" className="btn btn-danger" onClick={onLogout}>
                 Logout
               </button>
             </div>

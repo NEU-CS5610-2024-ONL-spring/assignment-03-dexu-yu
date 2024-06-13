@@ -6,7 +6,7 @@ const AuthTokenContext = React.createContext();
 
 const requestedScopes = ["profile", "email"];
 
-function AuthTokenProvider({ children }) {
+const AuthTokenProvider = ({ children }) => {
   const { getAccessTokenSilently, isAuthenticated } = useAuth0();
   const [accessToken, setAccessToken] = useState();
 
@@ -36,7 +36,7 @@ function AuthTokenProvider({ children }) {
       {children}
     </AuthTokenContext.Provider>
   );
-}
+};
 
 const useAuthToken = () => useContext(AuthTokenContext);
 

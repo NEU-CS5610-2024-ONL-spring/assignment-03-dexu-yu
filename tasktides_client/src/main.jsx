@@ -1,6 +1,6 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import PropTypes from 'prop-types'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import PropTypes from "prop-types";
 
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
@@ -30,9 +30,9 @@ const RequireAuth = ({ children }) => {
 
   // Otherwise, display the children (the protected page)
   return children;
-}
+};
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Auth0Provider
       domain={import.meta.env.VITE_TASKTIDES_AUTH0_DOMAIN}
@@ -69,7 +69,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       </AuthTokenProvider>
     </Auth0Provider>
   </React.StrictMode>,
-)
+);
 
 RequireAuth.propTypes = {
   children: PropTypes.node.isRequired,
