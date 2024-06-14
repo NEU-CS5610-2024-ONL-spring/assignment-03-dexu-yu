@@ -42,6 +42,8 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         audience: import.meta.env.VITE_TASKTIDES_AUTH0_AUDIENCE,
         scope: requestedScopes.join(" "),
       }}
+      useRefreshTokens
+      cacheLocation="localstorage"
     >
       <AuthTokenProvider>
         <BrowserRouter>

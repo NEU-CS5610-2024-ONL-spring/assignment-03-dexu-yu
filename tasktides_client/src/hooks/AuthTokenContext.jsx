@@ -18,6 +18,8 @@ const AuthTokenProvider = ({ children }) => {
             audience: import.meta.env.VITE_TASKTIDES_AUTH0_AUDIENCE,
             scope: requestedScopes.join(" "),
           },
+          useRefreshTokens: true,
+          cacheLocation: "localstorage"
         });
         setAccessToken(token);
       } catch (err) {
